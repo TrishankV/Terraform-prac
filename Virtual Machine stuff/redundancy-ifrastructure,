@@ -1,0 +1,7 @@
+resource "azurerm_availability_set" "sett" {
+    name = "aset"
+    location = local.loc
+    resource_group_name = local.rgname
+    platform_fault_domain_count = 3 
+    platform_update_domain_count = 3 
+}
