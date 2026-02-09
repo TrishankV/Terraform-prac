@@ -9,6 +9,8 @@ resource "azurerm_windows_virtual_machine" "vimal" {
     size = "Standard_B2s"
     admin_username = "ajaydevgn"
     admin_password = "kesari@54BJK"
+    availability_set_id = azurerm_availability_set.sett.id
+
     network_interface_ids = [
         azurerm_network_interface.nics[count.index].id
     ]
