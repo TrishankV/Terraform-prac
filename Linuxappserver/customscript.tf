@@ -1,0 +1,53 @@
+# customscript.tf
+
+# creating/using a storage account to store 
+# the powershell script in it via BLOBS 
+
+# data "azurerm_storage_account" "mounted" { 
+#     name = "frwnnjlfweljnljnde"
+#     resource_group_name = local.rgname
+
+# }
+# Can't use data as it was made to mount the cli and files 
+# and it doesnt hace the public acess in pluralsight
+
+resource "azurerm_storage_account" "sa" { 
+    name = "saccount32324"
+    resource_group_name = local.rgname 
+    location = local.loc
+    account_tier = "Standard"
+    account_replication_type = "LRS"
+    account_kind = "StorageV2"
+}
+
+
+resource "azurerm_storage_container" "scripts" { 
+    name = "scripts"
+    storage_account_name = azurerm_storage_account.sa.name 
+    container_access_type= "blob"
+}
+
+resource "azurerm_storage_blob" "bobiis" { 
+    name = "IIS.ps1"
+    storage_account_name = azurerm_storage_account.sa.name 
+    storage_container_name = azurerm_storage_container.scripts.name
+    type = "Block"
+    source = "IIS.ps1"
+}
+
+# for executing the powershell script on the vm 
+
+resource "azurerm_virtual_machine_extension" "vmex" {
+    name = "vmex"
+    virtual_machine_id = azurerm_windows_virtual_machine.vimal["webvm01"].id
+    publisher = "Microsoft.Compute"
+    type = "CustomScriptExtension"
+    type_handler_version = "1.10"
+      settings = <<SETTINGS
+    {
+        "fileUris": ["https://${azurerm_storage_account.sa.name}.blob.core.windows.net/${azurerm_storage_container.scripts.name}/${azurerm_storage_blob.bobiis.source}"],
+          "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file ${azurerm_storage_blob.bobiis.source}"     
+    }
+SETTINGS
+
+}
