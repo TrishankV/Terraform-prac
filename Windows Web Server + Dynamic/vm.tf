@@ -25,3 +25,12 @@ resource "azurerm_windows_virtual_machine" "vimal" {
         version = "latest"
     }
 }
+
+
+data "local_file" "cloudinit" {
+  filename = "cloudinit"
+}
+
+output "filecontents" {
+  value=data.local_file.cloudinit.content
+}
