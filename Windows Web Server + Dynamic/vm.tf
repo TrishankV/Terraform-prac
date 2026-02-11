@@ -2,7 +2,8 @@
 # this requires a web interface to exist ,
 
 resource "azurerm_windows_virtual_machine" "vimal" { 
-    name = var.app_environment.prod.vmname
+    for_each = var.app_environment.prod.subnets["websubnet01"].machines
+    name = each.key
     resource_group_name = local.rgname 
     location = local.loc
     size = "Standard_B2s"
@@ -10,7 +11,7 @@ resource "azurerm_windows_virtual_machine" "vimal" {
     admin_password = azurerm_key_vault_secret.vmpass.value
     # availability_set_id = azurerm_availability_set.sett.id
     network_interface_ids = [
-        azurerm_network_interface.nics.id
+        azurerm_network_interface.[each.key].id
     ]
 
     os_disk { 
@@ -24,13 +25,4 @@ resource "azurerm_windows_virtual_machine" "vimal" {
         sku = "2022-Datacenter"
         version = "latest"
     }
-}
-
-
-data "local_file" "cloudinit" {
-  filename = "cloudinit"
-}
-
-output "filecontents" {
-  value=data.local_file.cloudinit.content
 }
