@@ -3,21 +3,23 @@
 
 
 variable "app_environment" {
-    type = map(
-        object ({
-            vnname = string 
-            vncidr = string 
-            subnets = map(
-                object ({
-                    cidr = string 
+  type = map(
+    object({
+      vnname = string
+      vncidr = string
+      subnets = map(
+        object({
+          cidr = string
+          machines = map(
+            object({
+              niname       = string
+              publibipname = string
+            })
+          )
         })
-            )
-            niname  = string 
-            publibipname = string
-            vmname = string 
-})
-    ) 
-
+      )
+    })
+  )
 }
 
 variable "password" { 
