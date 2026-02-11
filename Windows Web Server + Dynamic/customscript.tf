@@ -39,7 +39,7 @@ resource "azurerm_storage_blob" "bobiis" {
 
 resource "azurerm_virtual_machine_extension" "vmex" {
     name = "vmex"
-    virtual_machine_id = azurerm_windows_virtual_machine.vimal.id
+    virtual_machine_id = azurerm_windows_virtual_machine.vimal["webvm01"].id
     publisher = "Microsoft.Compute"
     type = "CustomScriptExtension"
     type_handler_version = "1.10"
