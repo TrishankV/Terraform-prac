@@ -16,4 +16,14 @@ resource "azreurm_mssql_database" "sqldb" {
     license_type = "LicenseIncluded"
     max_size_gb = 2 
     sku_name = each.value.sku
+
+}
+
+# Adding a Firewall Rule
+
+resource "azurerm_mssql_firewall_rule" "allowmyclient" {
+    name = "AllowClientIp"
+  server_id = azurerm_mssql_server.sqlserver321e12["serverloli"]
+  start_ip_address = "96.204.16.49"
+  end_ip_address = "96.204.16.49"
 }
